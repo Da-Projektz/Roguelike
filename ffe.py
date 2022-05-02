@@ -1,4 +1,5 @@
 import tcod
+import os.path
 from settings import Settings
 
 
@@ -11,7 +12,9 @@ class FallingForEternity:
         self.settings = Settings()
         # Load the font, a 32 by 8 tile font with libtcod's old character layout.
         self.tileset = tcod.tileset.load_tilesheet(
-            "resources\\images\\dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD,
+            os.path.abspath("resources/images/dejavu10x10_gs_tc.png"),
+            32, 8,
+            tcod.tileset.CHARMAP_TCOD
         )
 
         # Create the main console.
@@ -43,5 +46,5 @@ class FallingForEternity:
 
 
 if __name__ == "__main__":
-    foe = FallingForEternity()
-    foe.run_game()
+    ffe = FallingForEternity()
+    ffe.run_game()
