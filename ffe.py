@@ -12,7 +12,8 @@ class FallingForEternity:
         self.settings = Settings()
         # Load the font, a 32 by 8 tile font with libtcod's old character layout.
         self.tileset = tcod.tileset.load_tilesheet(
-            os.path.abspath("resources/images/dejavu10x10_gs_tc.png"),
+            os.path.join(os.path.dirname('resources/images/'),
+                         'dejavu10x10_gs_tc.png'),
             32, 8,
             tcod.tileset.CHARMAP_TCOD
         )
