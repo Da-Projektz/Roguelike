@@ -5,7 +5,7 @@
 2. Stage and commit changes to `main`
 3. Push to a new branch like so:
   ```sh
-  git push main:branch-name
+  git push origin main:<branch-name>
   ```
 
 *Alternative*
