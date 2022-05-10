@@ -19,10 +19,10 @@ def main():
     pg.Surface.blit(dwarven_gauntlet_surface, dwarven_gauntlet, (0, 0))
     pg.mouse.set_cursor(dwarven_gauntlet_cursor)
 
-    toQuit = False
-    while not toQuit:
+    to_quit = False
+    while not to_quit:
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                toQuit = True
+                to_quit = True
                 pg.quit()
                 exit(0) # Explicitly return zero when the game was closed cleanly.
