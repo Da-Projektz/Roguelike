@@ -1,8 +1,12 @@
 import game
+from rich import print
 
+
+# Using calver for now
+VERSION = '220510.0-pre'
 
 def main():
-    pass
+    print(f'Rouge-like game VERSION [bold red]{VERSION}[/bold red].')
 
 
 # Protect other scripts from running main functions.
