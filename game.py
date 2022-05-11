@@ -1,31 +1,26 @@
-import os, sys
+import os
 
 # Prohibit Pygame from polluting `/dev/stdout`.
-import time
-
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame as pg
 
-mouse_cursor = pg.cursors.Cursor(pg.SYSTEM_CURSOR_HAND)
-fuckenWeirdHand = pg.image.load("fucken-weird-hand.png")
-fuckenWeirdHand_surface = pg.surface.Surface((81, 101))
-fuckenWeirdHand_cursor = pg.Cursor((17, 89), fuckenWeirdHand_surface) # Tip of the forefinger is the hotspot.
+dwarven_gauntlet = pg.image.load("dwarven_gauntlet.png")
+dwarven_gauntlet_surface = pg.surface.Surface((28, 32), pg.SRCALPHA)
+dwarven_gauntlet_cursor = pg.Cursor((2, 0), dwarven_gauntlet_surface) # Tip of the forefinger is the hotspot.
 
 
 def main():
     pg.init()
     pg.display.set_mode((800, 600))
-    pg.mouse.set_cursor(mouse_cursor)
 
-    fuckenWeirdHand_surface.convert_alpha()
-    fuckenWeirdHand_surface.fill(color = pg.Color(0,0,0,255)) # Make the surface transparent, except where we actually draw
-    pg.Surface.blit(fuckenWeirdHand_surface, fuckenWeirdHand, (0, 0))
-    pg.mouse.set_cursor(fuckenWeirdHand_cursor)
+    dwarven_gauntlet.convert_alpha()
+    dwarven_gauntlet_surface.convert_alpha()
+    pg.Surface.blit(dwarven_gauntlet_surface, dwarven_gauntlet, (0, 0))
+    pg.mouse.set_cursor(dwarven_gauntlet_cursor)
 
-
-    toQuit = False
-    while not toQuit:
+    to_quit = False
+    while not to_quit:
         for event in pg.event.get():
             if event.type == pg.QUIT:
+                to_quit = True
                 pg.quit()
-                exit(0) # Explicitly return zero when the game was closed cleanly.
