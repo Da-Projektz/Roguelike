@@ -1,12 +1,10 @@
-<<<<<<< HEAD
-import sys
-import pygame
-from pytmx.util_pygame import load_pygame
-
-from settings import Settings
-from player import Player
-from bullet import Bullet
 from tile import Tile
+from bullet import Bullet
+from player import Player
+from settings import Settings
+from pytmx.util_pygame import load_pygame
+import pygame
+import sys
 
 
 class RogueLike:
@@ -108,31 +106,3 @@ class RogueLike:
 if __name__ == '__main__':
     rl = RogueLike(False)
     rl.run_game()
-=======
-import os
-
-# Prohibit Pygame from polluting `/dev/stdout`.
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-import pygame as pg
-
-dwarven_gauntlet = pg.image.load("dwarven_gauntlet.png")
-dwarven_gauntlet_surface = pg.surface.Surface((28, 32), pg.SRCALPHA)
-dwarven_gauntlet_cursor = pg.Cursor((2, 0), dwarven_gauntlet_surface) # Tip of the forefinger is the hotspot.
-
-
-def main():
-    pg.init()
-    pg.display.set_mode((800, 600))
-
-    dwarven_gauntlet.convert_alpha()
-    dwarven_gauntlet_surface.convert_alpha()
-    pg.Surface.blit(dwarven_gauntlet_surface, dwarven_gauntlet, (0, 0))
-    pg.mouse.set_cursor(dwarven_gauntlet_cursor)
-
-    to_quit = False
-    while not to_quit:
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                to_quit = True
-                pg.quit()
->>>>>>> bb70a7fcd3f4980ed9ba000a96d5fd379b6a7fe4
