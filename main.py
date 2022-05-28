@@ -1,11 +1,11 @@
-import game
+# Prohibit Pygame from polluting `/dev/stdout`.
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+from game import Rogue
 
-
-def main():
-    pass
 
 
 # Protect other scripts from running main functions.
 if __name__ == "__main__":
-    main()
-    game.main()
+    rogue = Rogue()
+    rogue.game_loop()
