@@ -1,26 +1,108 @@
-import os
-
-# Prohibit Pygame from polluting `/dev/stdout`.
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-import pygame as pg
-
-dwarven_gauntlet = pg.image.load("dwarven_gauntlet.png")
-dwarven_gauntlet_surface = pg.surface.Surface((28, 32), pg.SRCALPHA)
-dwarven_gauntlet_cursor = pg.Cursor((2, 0), dwarven_gauntlet_surface) # Tip of the forefinger is the hotspot.
+from tile import Tile
+from bullet import Bullet
+from player import Player
+from settings import Settings
+from pytmx.util_pygame import load_pygame
+import pygame
+import sys
 
 
-def main():
-    pg.init()
-    pg.display.set_mode((800, 600))
+class RogueLike:
 
-    dwarven_gauntlet.convert_alpha()
-    dwarven_gauntlet_surface.convert_alpha()
-    pg.Surface.blit(dwarven_gauntlet_surface, dwarven_gauntlet, (0, 0))
-    pg.mouse.set_cursor(dwarven_gauntlet_cursor)
+    def __init__(self, full_flag=True):
+        pygame.init()
+        self.settings = Settings()
+        if full_flag == True:
+            self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+            self.settings.screen_width = self.screen.get_rect().width
+            self.settings.screen_height = self.screen.get_rect().height
+        else:
+            self.screen = pygame.display.set_mode(
+                (self.settings.screen_width, self.settings.screen_height)
+            )
+            pygame.display.set_caption("Rogue Like")
 
-    to_quit = False
-    while not to_quit:
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                to_quit = True
-                pg.quit()
+        # TODO: For tileset
+        # video mode must be set before this line
+        # self.tmx_data = load_pygame('resources\\tilesets\\tmx\\terrain.tmx')
+
+        #   for layer in tmx_data.visible_layers:
+        #   print(layer)
+
+        self.player = Player(self)
+        self.bullets = pygame.sprite.Group()
+        self.sprite_group = pygame.sprite.Group()
+
+    def run_game(self):
+        while True:
+            self._check_events()
+            self.player.update()
+            self._update_bullets()
+            # self._update_tiles()  # TODO: make this work some how.
+            self._update_screen()
+
+    def _update_tiles(self):
+        for layer in self.tmx_data.visible_layers:
+            if hasattr(layer, 'data'):
+                for x, y, surf in layer.tiles():
+                    pos = (x * 128, y * 128)
+                    Tile(pos=pos, surf=surf, groups=self.sprite_group)
+
+    def _update_bullets(self):
+        self.bullets.update()
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
+
+    def _check_events(self):
+        for event in pygame.event.get():
+            self._check_mouse_events(event)
+            self._check_keydown_events(event)
+            self._check_keyup_events(event)
+
+    def _key_event_handler(self, event, key_down_flag):
+        match event.key:
+            case pygame.K_UP:
+                self.player.moving_up = key_down_flag
+            case pygame.K_DOWN:
+                self.player.moving_down = key_down_flag
+            case pygame.K_RIGHT:
+                self.player.moving_right = key_down_flag
+            case pygame.K_LEFT:
+                self.player.moving_left = key_down_flag
+            case pygame.K_q:  # if the q key is pressed quit.
+                sys.exit()
+            case pygame.K_SPACE:  # shoot gun key
+                if key_down_flag:
+                    self._fire_bullet()
+            case _:
+                print(f"key {event.key} not mapped")
+
+    def _fire_bullet(self):
+        if self.settings.bullets_allowed > len(self.bullets):
+            print(f"n = {len(self.bullets)}")
+            self.bullets.add(Bullet(self))
+
+    def _check_keydown_events(self, event):
+        if event.type == pygame.KEYDOWN:
+            self._key_event_handler(event, True)
+
+    def _check_keyup_events(self, event):
+        if event.type == pygame.KEYUP:
+            self._key_event_handler(event, False)
+
+    def _check_mouse_events(self, event):
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+    def _update_screen(self):
+        self.screen.fill(self.settings.bg_color)
+        self.player.blitme()
+        for bullet in self.bullets:
+            bullet.draw_bullet()
+        pygame.display.flip()
+
+
+if __name__ == '__main__':
+    rl = RogueLike(False)
+    rl.run_game()
